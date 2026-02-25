@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/776120650681475433/c32e35a86f0c4c5b9899ecb3097ae427/artifacts
+end_time: 1771582115571
+entry_point_name: ''
+experiment_id: '776120650681475433'
+lifecycle_stage: active
+run_id: c32e35a86f0c4c5b9899ecb3097ae427
+run_name: enchanting-gull-302
+run_uuid: c32e35a86f0c4c5b9899ecb3097ae427
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1771582115500
+status: 4
+tags: []
+user_id: amrka

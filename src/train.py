@@ -3,6 +3,7 @@ This module contains functions to preprocess and train the model
 for bank consumer churn prediction.
 """
 
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.utils import resample
@@ -20,6 +21,10 @@ from sklearn.metrics import (
 )
 
 ### Import MLflow
+import mlflow
+import mlflow.sklearn
+from mlflow.models import infer_signature
+
 
 def rebalance(data):
     """
@@ -127,48 +132,96 @@ def train(X_train, y_train):
 
     ### Log the model with the input and output schema
     # Infer signature (input and output schema)
+    signature = infer_signature(X_train, log_reg.predict(X_train))
+    
 
     # Log model
+    mlflow.sklearn.log_model(
+        sk_model=log_reg,
+        artifact_path="model",
+        signature=signature,
+    )
 
     ### Log the data
-
     return log_reg
 
 
 def main():
+
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    DATA_PATH = os.path.join(BASE_DIR, "dataset", "Churn_Modelling.csv")
     ### Set the tracking URI for MLflow
+    mlflow.set_tracking_uri("http://127.0.0.1:5000")
 
     ### Set the experiment name
-
+    mlflow.set_experiment("Bank_Churn_Experiment")
 
     ### Start a new run and leave all the main function code as part of the experiment
 
-    df = pd.read_csv("data/Churn_Modelling.csv")
-    col_transf, X_train, X_test, y_train, y_test = preprocess(df)
+    with mlflow.start_run():
+
+        df = pd.read_csv(DATA_PATH)
+        col_transf, X_train, X_test, y_train, y_test = preprocess(df)
+
+        ### Log the max_iter parameter
+        mlflow.log_param("max_iter", 1000)
+
+        model = train(X_train, y_train)
+
+        y_pred = model.predict(X_test)
+
+        ### Log metrics after calculating them
+        acc = accuracy_score(y_test, y_pred)
+        prec = precision_score(y_test, y_pred)
+        rec = recall_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+
+        mlflow.log_metric("accuracy", acc)
+        mlflow.log_metric("precision", prec)
+        mlflow.log_metric("recall", rec)
+        mlflow.log_metric("f1_score", f1)
+
+        ### Log tag
+        mlflow.set_tag("model_type", "LogisticRegression")
+
+        conf_mat = confusion_matrix(y_test, y_pred, labels=model.classes_)
+        conf_mat_disp = ConfusionMatrixDisplay(
+            confusion_matrix=conf_mat, display_labels=model.classes_
+        )
+        conf_mat_disp.plot()
+
+        # Log the image as an artifact in MLflow
+        plt.savefig("confusion_matrix.png")
+        mlflow.log_artifact("confusion_matrix.png")
+
+        plt.show()
+
+    # df = pd.read_csv("data/Churn_Modelling.csv")
+    # col_transf, X_train, X_test, y_train, y_test = preprocess(df)
 
     ### Log the max_iter parameter
 
-    model = train(X_train, y_train)
+    # model = train(X_train, y_train)
 
     
-    y_pred = model.predict(X_test)
+    # y_pred = model.predict(X_test)
 
-    ### Log metrics after calculating them
+    # ### Log metrics after calculating them
 
 
-    ### Log tag
+    # ### Log tag
 
 
     
-    conf_mat = confusion_matrix(y_test, y_pred, labels=model.classes_)
-    conf_mat_disp = ConfusionMatrixDisplay(
-        confusion_matrix=conf_mat, display_labels=model.classes_
-    )
-    conf_mat_disp.plot()
+    # conf_mat = confusion_matrix(y_test, y_pred, labels=model.classes_)
+    # conf_mat_disp = ConfusionMatrixDisplay(
+    #     confusion_matrix=conf_mat, display_labels=model.classes_
+    # )
+    # conf_mat_disp.plot()
     
-    # Log the image as an artifact in MLflow
+    # # Log the image as an artifact in MLflow
     
-    plt.show()
+    # plt.show()
 
 
 if __name__ == "__main__":

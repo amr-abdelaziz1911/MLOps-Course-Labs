@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/776120650681475433/30e6e2d9c00144a093efa5887f553d63/artifacts
+end_time: 1771582160566
+entry_point_name: ''
+experiment_id: '776120650681475433'
+lifecycle_stage: active
+run_id: 30e6e2d9c00144a093efa5887f553d63
+run_name: welcoming-midge-848
+run_uuid: 30e6e2d9c00144a093efa5887f553d63
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1771582160493
+status: 4
+tags: []
+user_id: amrka

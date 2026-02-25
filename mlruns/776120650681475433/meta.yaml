@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/776120650681475433
+creation_time: 1771581779469
+experiment_id: '776120650681475433'
+last_update_time: 1771581779469
+lifecycle_stage: active
+name: Bank_Churn_Experiment

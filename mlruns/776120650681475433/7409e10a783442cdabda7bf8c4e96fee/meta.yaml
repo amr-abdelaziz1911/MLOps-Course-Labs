@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/776120650681475433/7409e10a783442cdabda7bf8c4e96fee/artifacts
+end_time: 1771582233269
+entry_point_name: ''
+experiment_id: '776120650681475433'
+lifecycle_stage: active
+run_id: 7409e10a783442cdabda7bf8c4e96fee
+run_name: dazzling-kit-808
+run_uuid: 7409e10a783442cdabda7bf8c4e96fee
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1771582233202
+status: 4
+tags: []
+user_id: amrka
